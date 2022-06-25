@@ -1,6 +1,6 @@
 const express = require("express");
-const { body } = require("express-validator");
-const checkValidationErrors = require("../middleware/handleValidationErrors");
+const { body, cookie } = require("express-validator");
+const handleValidationErrors = require("../middleware/handleValidationErrors");
 const { nameRules } = require("../validation/register");
 const AuthController = require("../controllers/AuthController");
 
@@ -10,8 +10,15 @@ router.post(
   "/login",
   body("email").isEmail(),
   body("password").isLength({ min: 3 }),
-  checkValidationErrors,
+  handleValidationErrors,
   AuthController.login
+);
+
+router.post(
+  "/login/refresh",
+  cookie("refreshToken").isString().notEmpty(),
+  handleValidationErrors,
+  AuthController.refreshLogin
 );
 
 router.post(
@@ -20,7 +27,7 @@ router.post(
   body("password").isString().isLength({ min: 3 }),
   body("nickname").isString().isLength({ min: 3 }),
   ...nameRules,
-  checkValidationErrors,
+  handleValidationErrors,
   AuthController.register
 );
 
