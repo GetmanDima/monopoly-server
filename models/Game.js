@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, Types} = require("mongoose");
 
 const Game = new Schema({
   actionTime: {
@@ -16,21 +16,11 @@ const Game = new Schema({
   }],
   result: Number,
   board: {
-    _id: {
-      type: Types.ObjectId,
-      ref: "Board",
-      required: true,
-    },
     name: {
       type: String,
       required: true,
     },
     fields: [{
-      id: {
-        type: Number,
-        required: true,
-        unique: true,
-      },
       name: {
         type: String,
         required: true,
@@ -42,16 +32,10 @@ const Game = new Schema({
         required: true,
       },
       actionIds: [{
-        type: Number,
-        unique: true,
+        type: Types.ObjectId,
       }],
       company: {
         type: {
-          id: {
-            type: Number,
-            required: true,
-            unique: true
-          },
           name: {
             type: String,
             required: true,
@@ -70,95 +54,83 @@ const Game = new Schema({
         required: false,
       }
     }],
-    actions: {
-      type: [{
-        id: {
-          type: Number,
-          required: true,
-          unique: true
-        },
-        name: {
-          type: String,
-          required: true,
-        },
-        description: String,
-        type: {
-          type: String,
-          required: true,
-        },
-        payload: {
-          type: Object,
-        },
-        nextActionId: {
-          type: Number,
-          unique: true,
-        },
-      }],
-      required: false,
-    },
-  },
-  states: {
-    type: [{
-      users: [{
-        userId: {
-          type: Types.ObjectId,
-          ref: "User",
-          required: true,
-        },
-        order: {
-          type: Number,
-          required: true,
-        },
-        money: {
-          type: Number,
-          required: true,
-        },
-        position: {
-          type: Number,
-          required: true,
-        },
-        nextActionId: {
-          type: Number,
-          unique: true,
-        },
-        companyIds: [{
-          type: Number,
-          unique: true,
-        }]
-      }],
-      moveNumber: {
-        type: Number,
+    actions: [{
+      name: {
+        type: String,
         required: true,
       },
-      nextMoveUserId: {
+      description: String,
+      type: {
+        type: String,
+        required: true,
+      },
+      payload: {
+        type: Object,
+      },
+      nextActionId: {
+        type: Types.ObjectId
+      },
+    }],
+  },
+  states: [{
+    users: [{
+      userId: {
         type: Types.ObjectId,
         ref: "User",
         required: true,
       },
-      createdAt: {
-        type: Date,
-        default: Date.now()
-      }
+      order: {
+        type: Number,
+        required: true,
+      },
+      money: {
+        type: Number,
+        required: true,
+      },
+      position: {
+        type: Number,
+        required: true,
+      },
+      nextActionId: {
+        type: Types.ObjectId,
+      },
+      companyIds: [{
+        type: Types.ObjectId,
+      }]
     }],
-    required: false,
-  },
+    moveNumber: {
+      type: Number,
+      required: true,
+    },
+    nextMoveUserId: {
+      type: Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
   actions: [{
     number: {
       type: Number,
       required: true,
-      unique: true
     },
     actionId: {
-      type: Number,
-      required: true,
+      type: Types.ObjectId,
     },
     description: String,
     payload: Object,
     createdAt: {
       type: Date,
-      default: Date.now()
+      default: Date.now
     }
-  }]
+  }],
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 module.exports = model("Game", Game);

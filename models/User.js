@@ -17,7 +17,6 @@ const User = new Schema({
   },
   refreshToken: {
     type: String,
-    unique: true,
   },
   rating: {
     type: Number,
@@ -43,6 +42,10 @@ const User = new Schema({
       default: 0,
     },
   },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 module.exports = model("User", User);

@@ -6,11 +6,6 @@ const Board = new Schema({
     required: true,
   },
   fields: [{
-    id: {
-      type: Number,
-      required: true,
-      unique: true,
-    },
     name: {
       type: String,
       required: true,
@@ -22,16 +17,10 @@ const Board = new Schema({
       required: true,
     },
     actionIds: [{
-      type: Number,
-      unique: true,
+      type: Types.ObjectId,
     }],
     company: {
       type: {
-        id: {
-          type: Number,
-          required: true,
-          unique: true
-        },
         name: {
           type: String,
           required: true,
@@ -50,32 +39,23 @@ const Board = new Schema({
       required: false,
     }
   }],
-  actions: {
-    type: [{
-      id: {
-        type: Number,
-        required: true,
-        unique: true
-      },
-      name: {
-        type: String,
-        required: true,
-      },
-      description: String,
-      type: {
-        type: String,
-        required: true,
-      },
-      payload: {
-        type: Object,
-      },
-      nextActionId: {
-        type: Number,
-        unique: true,
-      },
-    }],
-    required: false,
-  },
+  actions: [{
+    name: {
+      type: String,
+      required: true,
+    },
+    description: String,
+    type: {
+      type: String,
+      required: true,
+    },
+    payload: {
+      type: Object,
+    },
+    nextActionId: {
+      type: Types.ObjectId
+    },
+  }],
 });
 
 module.exports = model("Board", Board);

@@ -34,6 +34,10 @@ const Application = new Schema({
       name: String,
     },
   },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 module.exports = model("Application", Application);
