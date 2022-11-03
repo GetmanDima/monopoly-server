@@ -3,18 +3,23 @@ const { body, param } = require("express-validator");
 const handleValidationErrors = require("../middleware/handleValidationErrors");
 const isAuthenticated = require("../middleware/isAuthenticated");
 const getAuthenticatedUser = require("../middleware/getAuthenticatedUser");
+const applicationExists = require("../middleware/application/applicationExists")
+const userHasNotApplication = require("../middleware/application/userHasNotApplication")
+const userHasNotGame = require("../middleware/application/userHasNotGame")
 const ApplicationController = require("../controllers/ApplicationController");
 
 const router = express.Router();
 
-router.get("/personal", isAuthenticated, ApplicationController.getPersonal);
+router.use(isAuthenticated);
 
 router.get(
-  "/:applicationId",
-  param("applicationId").isString().isLength({ min: 24, max: 24 }),
-  handleValidationErrors,
-  isAuthenticated,
-  ApplicationController.getOne
+  "/",
+  ApplicationController.getAll
+);
+
+router.get(
+  "/personal",
+  ApplicationController.getPersonal
 );
 
 router.post(
@@ -23,17 +28,28 @@ router.post(
   body("userCount").isInt({ min: 2, max: 8 }),
   body("boardId").isString().isLength({ min: 24, max: 24 }),
   handleValidationErrors,
-  isAuthenticated,
+  userHasNotApplication,
+  userHasNotGame,
   getAuthenticatedUser,
   ApplicationController.create
 );
 
-router.delete(
-  "/:applicationId",
+router.post(
+  "/:applicationId/attach",
   param("applicationId").isString().isLength({ min: 24, max: 24 }),
   handleValidationErrors,
-  isAuthenticated,
-  ApplicationController.delete
+  applicationExists,
+  userHasNotApplication,
+  userHasNotGame,
+  ApplicationController.attach
+);
+
+router.post(
+  "/:applicationId/detach",
+  param("applicationId").isString().isLength({ min: 24, max: 24 }),
+  handleValidationErrors,
+  applicationExists,
+  ApplicationController.detach
 );
 
 module.exports = router;
