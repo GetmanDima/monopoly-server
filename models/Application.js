@@ -5,6 +5,11 @@ const Application = new Schema({
     type: Number,
     required: true,
   },
+  connectedUserIds: [{
+    type: Types.ObjectId,
+    ref: "User",
+    required: true,
+  }],
   userCount: {
     type: Number,
     required: true,
